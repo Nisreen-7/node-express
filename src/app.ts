@@ -1,5 +1,6 @@
 import 'dotenv/config'; //Import nécessaire pour que les fichier .env soient pris en compte et charger dans le process.env
 import express from 'express';
+import cors from 'cors';
 import { exampleController } from './controller/example-controller';
 import { firstController } from './controller/first-controller';
 import { personController } from './controller/person-controller';
@@ -10,6 +11,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 //On indique à notre application de convertir les body des requêtes JSON en objet js
 app.use(express.json());
+app.use(cors());
 
 //Ici, on assigne notre contrôleur à la route /api/example, ce qui fait que toutes les routes définies dans le contrôleur seront préfixées par /api/example
 app.use('/api/example', exampleController);
@@ -18,5 +20,5 @@ app.use('/api/person', personController)
 
 //On dit à l'application d'écouter les requêtes http sur le port choisit
 app.listen(port, () => {
-    console.log('listening on http://localhost:'+port);
+    console.log('listening on http://localhost:' + port);
 });
