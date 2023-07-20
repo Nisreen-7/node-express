@@ -5,9 +5,9 @@ import { connection } from "../repository/connection";
 export const exampleController = Router();
 
 //accessible sur http://localhost:3000/api/example en GET
-exampleController.get('/', async (req, res) => {
+exampleController.get('/', async (req,res)=> {
     const db = connection.db('first');
-    const collection = db.collection('person');
+    const collection  =db.collection('person');
     const list = await collection.find().toArray();
     res.json(list);
 
@@ -15,6 +15,6 @@ exampleController.get('/', async (req, res) => {
 
 })
 //accessible sur http://localhost:3000/api/example/bloup en GET
-exampleController.get('/bloup', (req, res) => {
+exampleController.get('/bloup', (req,res) => {
     res.send('yes, bloup')
 })

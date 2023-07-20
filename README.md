@@ -2,9 +2,12 @@
 
 Un projet node.js utilisant express pour la partie contrôleurs et mongodb pour la partie data
 ## How To Use
-    1. Cloner le projet
-    2. Faire un npm i
-    3. Lancer avec npm start
+
+ 1. Cloner le projet
+ 2. Faire un npm i
+ 3. Créer un fichier .env avec une variable d'environnement DATABASE_URL (exemple : DATABASE_URL=mongodb://127.0.0.1:27017)
+ 4. Lancer avec npm start
+
 
 ## Petit exo contrôleur express :
 
@@ -31,3 +34,49 @@ ____________________________________________________
 4. Dans le personRepository, rajouter un findAll() {} et dedans faire un return du find().toArray()
 	
 5. Créer un personController dans son propre fichier, le charger sur la route /api/person dans le app.ts et dans ce contrôleur déclarer une route async en get sur / qui va await le personRepository.findAll() et faire un res.json du resultat
+_____________________________________
+## findById et persist
+
+1. Dans le personRepository, rajouter une méthode findById(_id:string) qui va faire un findOne avec la collection pour rechercher un élément par son _id
+	
+2. Dans le personController, créer une nouvelle route sur /:id et récupérer la valeur de l'id avec req.params.id et utiliser cette valeur dans le findById
+	
+3. Faire une petite vérification que la person renvoyé n'est pas null, si elle l'est, on fait un res.status(404).end('Not Found') sinon on fait le res.json classique
+	
+4. Dans personRepository, on rajoute un persist(person:Person) et on l'utilise dans un insertOne
+	
+5. On fait une route en post dans le personController et on donne le req.body à manger au persist.
+_____________________________________________
+## Delete et update
+	
+1. Dans le personRepository, créer une méthode remove(_id:string) qui va faire une suppression sur la collection person en se basant sur l'id/ObjectId
+	
+2. Dans le personController, rajouter une route de type delete sur /:id, avec le middleware checkId pour s'assurer que l'id est bien un ObjectId valide
+	
+3. Dans cette route, appeler la méthode remove du repository et faire une réponse 204 sans contenu si ça a marché
+4. Dans le personRepository, faire une méthode update qui va attendre un _id:string et un person:Person et utiliser la collection pour faire un updateOne({_id:new ObjectId(_id)}, {$set:person})
+	
+5. Côté contrôleur, rajouter une nouvelle route /:id avec un checkId et appeler le update dedans avec le req.params.id et le req.body et avec la validation
+
+
+Pour le delete, modifier le entities.ts et passer le type de _id? à any.
+Et pour faire le deleteOne il faudra lui donner un objet en argument avec {_id:new ObjectId(_id)}
+_____________________________
+## Créer une application angular avec routing,
+ faire un component Home et l'assigner à la route par défaut, supprimer tout ce qu'il y a dans le app.component.html sauf le router-outlet, créer le environment.ts avec un serverUrl dedans, Rajouter le link du css de bootstrap dans le index.html, modifier le tsconfig.json pour y ajouter le strictPropertyInitialization: false
+	
+Copier-coller le fichier entities.ts du back vers le front
+	
+Générer un PersonService avec un fetchAll(), un delete(person:Person) et un post(person:Person)  dedans
+	
+Générer un PersonItemComponent avec un @Input Person dedans et y afficher la person sous forme de card à l'intérieur
+	
+Dans le HomeComponent, appeler le fetchAll du service et boucler sur le résultat dans le template pour afficher un app-person-item par résultat
+	
+Rajouter une variable selected:Person|null  dans le HomeComponent et créer une fonction select(person:Person) qui va vérifier si person == selected, si oui on met null dans selected, sinon on met person dans selected
+	
+Avec un ngStyle ou un ngClass modifier l'apparence du app-person-item dont la person correspond à selected
+	
+Rajouter une méthode removeSelected dans le HomeComponent qui va lancer la méthode delete du service puis retirer la person supprimée de la liste et remettre selected à null
+	
+Rajouter un bouton dans le template qui ne s'affichera que si selected contient quelque chose et qui au click déclenchera le removeSelected
