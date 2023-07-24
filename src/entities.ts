@@ -11,3 +11,12 @@ export interface Person {
     age: number;
     address: Address;
 }
+
+export interface User {
+
+    _id?: any;
+    email: string;
+    password: string;
+    role: string;
+
+}

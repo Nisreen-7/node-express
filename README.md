@@ -63,20 +63,43 @@ Pour le delete, modifier le entities.ts et passer le type de _id? à any.
 Et pour faire le deleteOne il faudra lui donner un objet en argument avec {_id:new ObjectId(_id)}
 _____________________________
 ## Créer une application angular avec routing,
- faire un component Home et l'assigner à la route par défaut, supprimer tout ce qu'il y a dans le app.component.html sauf le router-outlet, créer le environment.ts avec un serverUrl dedans, Rajouter le link du css de bootstrap dans le index.html, modifier le tsconfig.json pour y ajouter le strictPropertyInitialization: false
+ 1. faire un component Home et l'assigner à la route par défaut, supprimer tout ce qu'il y a dans le app.component.html sauf le router-outlet, créer le environment.ts avec un serverUrl dedans, Rajouter le link du css de bootstrap dans le index.html, modifier le tsconfig.json pour y ajouter le strictPropertyInitialization: false
 	
-Copier-coller le fichier entities.ts du back vers le front
+2. Copier-coller le fichier entities.ts du back vers le front
 	
-Générer un PersonService avec un fetchAll(), un delete(person:Person) et un post(person:Person)  dedans
+3. Générer un PersonService avec un fetchAll(), un delete(person:Person) et un post(person:Person)  dedans
 	
-Générer un PersonItemComponent avec un @Input Person dedans et y afficher la person sous forme de card à l'intérieur
+4. Générer un PersonItemComponent avec un @Input Person dedans et y afficher la person sous forme de card à l'intérieur
 	
-Dans le HomeComponent, appeler le fetchAll du service et boucler sur le résultat dans le template pour afficher un app-person-item par résultat
+5. Dans le HomeComponent, appeler le fetchAll du service et boucler sur le résultat dans le template pour afficher un app-person-item par résultat
 	
-Rajouter une variable selected:Person|null  dans le HomeComponent et créer une fonction select(person:Person) qui va vérifier si person == selected, si oui on met null dans selected, sinon on met person dans selected
+6. Rajouter une variable selected:Person|null  dans le HomeComponent et créer une fonction select(person:Person) qui va vérifier si person == selected, si oui on met null dans selected, sinon on met person dans selected
 	
-Avec un ngStyle ou un ngClass modifier l'apparence du app-person-item dont la person correspond à selected
+7. Avec un ngStyle ou un ngClass modifier l'apparence du app-person-item dont la person correspond à selected
 	
-Rajouter une méthode removeSelected dans le HomeComponent qui va lancer la méthode delete du service puis retirer la person supprimée de la liste et remettre selected à null
+8. Rajouter une méthode removeSelected dans le HomeComponent qui va lancer la méthode delete du service puis retirer la person supprimée de la liste et remettre selected à null
 	
-Rajouter un bouton dans le template qui ne s'affichera que si selected contient quelque chose et qui au click déclenchera le removeSelected
+9. Rajouter un bouton dans le template qui ne s'affichera que si selected contient quelque chose et qui au click déclenchera le removeSelected
+
+
+
+_____________________________________
+## Authentification node + express + passport?
+
+1. Dans le projet node-express, rajouter une nouvelle interface User dans les entities qui aura un _id?:any, un email en string, un password en string et un role en string
+	
+2. Créer un user-repository.ts sur le même modèle que le person-repository, avec dedans juste un findByEmail et un persist
+	
+3. Installer la library bcrypt (qui permet de créer et comparé des hash auto salés) avec un npm i bcrypt puis un npm i @types/bcrypt -D
+	
+4. Créer un auth-controller.ts et dedans créer un router authController ainsi qu'un schéma de validation Joi qui va attendre un email de type string/email et un password de type string minimum 4 caractères
+	
+5. Dans ce contrôleur, créer une route POST sur /api/user dans laquelle on va : valider le req.body avec Joi, puis assigner un role 'ROLE_USER' au req.body, puis utiliser bcrypt pour hasher le req.body.password et le réassigner au req.body.password avant de faire persister le tout
+	
+6. Installer la library jsonwebtoken et son typage avec un npm i jsonwebtoken puis un npm i @types/jsonwebtoken -D
+	
+7. Dans le auth-controller, créer une route sur /api/login en POST qui recevra dans le body un email et un password. Utiliser le req.body.email pour faire un findByEmail, si pas de résultat, on renvoit une erreur 401, si résultat alors on utilise la méthode compare de bcrypt pour comparer le req.body.password et le password de l'objet user renvoyé par le findByEmail (méthode asynchrone, il faut donc la await), si le résultat est false, on renvoie une erreur 401
+	
+8. Si le résultat est vrai, alors on utilise la méthode sign de jsonwebtoken dans laquelle on va donner en premier argument le user récupéré par le findByEmail et en deuxième argument une chaîne de caractère, peu importe quoi. Cette méthode génère un token qu'on peut renvoyer dans la response
+	
+9. Pour la suite on pourra la faire ensemble, mais pour celles et ceux qui veulent chercher, on peut utiliser passport et passport-jwt pour faire l'authentification par token
