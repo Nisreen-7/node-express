@@ -103,3 +103,7 @@ _____________________________________
 8. Si le résultat est vrai, alors on utilise la méthode sign de jsonwebtoken dans laquelle on va donner en premier argument le user récupéré par le findByEmail et en deuxième argument une chaîne de caractère, peu importe quoi. Cette méthode génère un token qu'on peut renvoyer dans la response
 	
 9. Pour la suite on pourra la faire ensemble, mais pour celles et ceux qui veulent chercher, on peut utiliser passport et passport-jwt pour faire l'authentification par token
+
+
+npm i passport passport-jwt
+npm i @types/passport @types/passport-jwt -D
